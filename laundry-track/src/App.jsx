@@ -14,13 +14,20 @@ function App() {
       </ul>
       </header>
 
-      <div className='lg:w-full h-120 flex items-center justify-center sm:py-20 px-4 '>
+      <div className='lg:w-full h-120 flex  items-center justify-center sm:py-20 px-4 '>
         <div className='bg-white w-400 h-100 rounded-lg'> 
-          <div className=' text-4xl text-center font-semibold py-4'>Collection
-      </div>
-
+          <div className=' text-4xl text-start font-semibold py-4 px-4'>Collection</div>
+           {/* Card of collection clothes*/}
+          <div className='bg-slate-200 w-90 h-40 rounded-lg mx-4 my-4'>
+          <div className=' text-lg text-start font-medium py-4 px-4 flex flex-col  '>
+            <h2 className='text-start text-xl '>Collection Name</h2>
+            <h3 className='text-start text-sm/9 font-normal'>10 items</h3>
+            <button className='bg-slate-300 text-slate-800 rounded-lg px-5 py-1 w-80 my-7  hover:bg-slate-800 hover:text-slate-100 '>Add more</button>
+          </div>
+          </div>
+          
       
-      <div className='flex items-center justify-end py-65 px-5 '>
+      <div className='flex items-center justify-end  px-5 '>
           <button className='bg-teal-400 rounded-full px-4 py-2 font-medium text-white hover:bg-teal-800 text-teal-100 hover:scale-108 hover:transition-all'>Save Changes</button>
       </div>
       </div>

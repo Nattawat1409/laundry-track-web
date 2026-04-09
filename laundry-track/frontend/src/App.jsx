@@ -4,10 +4,14 @@ import Register from './pages/register.jsx'
 import LandingPage from './pages/landingPage.jsx'
 import './App.css' 
 import {Route , Routes} from 'react-router-dom'
+
 // Navigation component
+// define and intialize routing in each page 
+
 const App = () => {
   return (
     <div>
+      
       
       <Routes>
         <Route path="/" element = {<LandingPage />}/>

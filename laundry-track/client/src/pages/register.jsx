@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { use , useState, useEffect  } from 'react';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import LogoImage from '../assets/Logo.png';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
 
 function Register() {
   const [formData, setFormData] = useState({

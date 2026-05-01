@@ -1,11 +1,12 @@
 {
     "name": "backend",
     "version": "1.0.0",
-    "main": "register.js",
+    "main": "test.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node register",
-        "dev": "nodemon register"
+        "start": "nodemon test",
+        "dev": "nodemon test",
+        "test-server": "nodemon test.js"
     },
     "keywords": [],
     "author": "",

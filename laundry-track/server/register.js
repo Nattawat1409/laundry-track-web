@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(
 const app = express();
 const port = 3000;
 const corOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
 }
 
 app.use(bodyParser.json({ extended: true }));
@@ -35,6 +35,12 @@ app.post('/register', (req, res) => {
         data: { fullName, email, password }
     });
 });
+
+// Simple JSON endpoint for the React client to fetch during development
+app.get('/test', (req, res) => {
+    res.json({ name: 'hello this is test API' });
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

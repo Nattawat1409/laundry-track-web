@@ -1,9 +1,10 @@
-import React, { use } from 'react';
+import React, { use , useState, useEffect  } from 'react';
 import { Zap, BarChart3, Clock, Users, ArrowRight, Droplets } from 'lucide-react';
 import LogoImage from '../assets/Logo_Nav.png';
 import LaundryImage from '../assets/Laundry_image.jpg';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import Navbar from '../component/Navbar';
+import Footer from '../component/Footer';
 
 function LandingPage() {
   const [count,setCount] = useState(0);
@@ -41,24 +42,11 @@ function LandingPage() {
   //   }
   // },[])
   
-
   return (
     
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <img src={LogoImage} alt="Laundry Track" className="w-40 h-auto" />
-            <a
-              href="/login"
-              className="bg-teal-400 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-teal-500 transition-colors"
-            >
-              Sign In
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navbar/>
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-teal-50 via-white to-teal-50 py-20 sm:py-32">
@@ -251,50 +239,8 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-300 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="text-white font-semibold mb-4">Product</h4>
-              <ul className="space-y-2">
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#blog" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#careers" className="hover:text-white transition-colors">Careers</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li><a href="#privacy" className="hover:text-white transition-colors">Privacy</a></li>
-                <li><a href="#terms" className="hover:text-white transition-colors">Terms</a></li>
-                <li><a href="#security" className="hover:text-white transition-colors">Security</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Follow Us</h4>
-              <ul className="space-y-2">
-                <li><a href="#twitter" className="hover:text-white transition-colors">Twitter</a></li>
-                <li><a href="#facebook" className="hover:text-white transition-colors">Facebook</a></li>
-                <li><a href="#instagram" className="hover:text-white transition-colors">Instagram</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-700 pt-8 flex justify-between items-center">
-            <p className="text-sm">&copy; 2024 Laundry Track. All rights reserved.</p>
-            <a href="/login" className="text-teal-400 hover:text-teal-300 font-semibold">
-              Sign In
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
+
     </div>
   );
 }

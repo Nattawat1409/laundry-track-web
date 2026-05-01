@@ -1,73 +1,10 @@
-import LogoImage from '../assets/logo.png';
-import React, { useState } from 'react';
-import { Plus, Home, Package, User, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Home as HomeIcon, Package, User } from 'lucide-react';
+import Navbar from '../component/navbar';
+import Footer from '../component/footer';
 
+// Collection Card Component
 
-
-// Navigation component
-const Navbar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
-  const navItems = [
-    { label: 'Laundry', icon: Home, href: '#laundry' },
-    { label: 'Collections', icon: Package, href: '#collections' },
-    { label: 'Account', icon: User, href: '#account' },
-  ];
-
-  return (
-
-    // Navbar
-    <header className="bg-white border-b border-slate-200">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <img src={LogoImage} alt="Logo" className='w-35 hover:scale-105 transition-all' />
-          <a href="/" className="flex-shrink-0 hover:opacity-80 transition-opacity">
-          </a>
-
-          {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  className="text-slate-600 hover:text-teal-300 font-medium flex items-center gap-2 hover:scale-105 transition-all"
-                >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200">
-            <ul className="space-y-2">
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-teal-500 rounded-lg hover:scale-105 transition-all"
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span className="font-medium">{item.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </nav>
-    </header>
-  );
-};
 
 // Collection Card Component
 const CollectionCard = ({ collection, onSave }) => {
@@ -122,8 +59,8 @@ const CollectionCard = ({ collection, onSave }) => {
   );
 };
 
-// Main App Component
-function App() {
+// Main Page Component
+function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [collections, setCollections] = useState([
     { id: 1, name: 'Weekly Laundry', items: 12 },
@@ -145,12 +82,11 @@ function App() {
     };
     setCollections([...collections, newCollection]);
   };
-
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
         {/* Page Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
@@ -193,8 +129,10 @@ function App() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }
 
-export default App;
+export default Home;

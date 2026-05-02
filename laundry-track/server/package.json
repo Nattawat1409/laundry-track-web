@@ -1,11 +1,12 @@
 {
     "name": "backend",
     "version": "1.0.0",
-    "main": "test.js",
+    "main": "index.js",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon test",
-        "dev": "nodemon test",
+        "start": "nodemon index.js",
+        "dev": "nodemon index.js",
         "test-server": "nodemon test.js"
     },
     "keywords": [],
@@ -15,7 +16,11 @@
     "dependencies": {
         "body-parser": "^2.2.2",
         "cors": "^2.8.6",
-        "express": "^5.2.1"
+        "express": "^5.2.1",
+        "express-react-views": "^0.11.0",
+        "express-session": "^1.19.0",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0"
     },
     "devDependencies": {
         "nodemon": "^3.1.14"

@@ -1,16 +1,33 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/Logo.png';
+import { useAuth } from '../context/AuthContext';
+import { describeAxiosError } from '../utils/errors';
 
 function Login() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
-    // Add your login logic here
+    setError('');
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      navigate('/home');
+    } catch (err) {
+      setError(describeAxiosError(err, 'Login failed'));
+      console.error('Login failed:', err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -24,6 +41,12 @@ function Login() {
         {/* Heading */}
         <h1 className="text-3xl font-bold text-slate-900 mb-2 text-center">Welcome Back</h1>
         <p className="text-slate-500 text-center mb-8">Sign in to your account</p>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-5">
@@ -89,9 +112,10 @@ function Login() {
           {/* Sign In Button */}
           <button
             type="submit"
-            className="w-full bg-teal-400 text-white font-semibold py-2.5 rounded-lg hover:bg-teal-500 transition-colors mt-8 shadow-md hover:shadow-lg"
+            disabled={submitting}
+            className="w-full bg-teal-400 text-white font-semibold py-2.5 rounded-lg hover:bg-teal-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors mt-8 shadow-md hover:shadow-lg"
           >
-            Sign In
+            {submitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 

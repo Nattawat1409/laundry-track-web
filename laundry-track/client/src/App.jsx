@@ -1,32 +1,42 @@
-import {useState , useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
 import Home from './pages/home.jsx';
 import Login from './pages/login.jsx';
 import Register from './pages/register.jsx';
 import LandingPage from './pages/landingPage.jsx';
-import Test from './pages/test.jsx';
-import './App.css' ;
-import {Route , Routes} from 'react-router-dom';
-import axios from 'axios';
+import './App.css';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
-// Navigation component
-// define and intialize routing in each page 
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-slate-500">
+        Loading...
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
 
 const App = () => {
-
   return (
-    <div>
-      
-      
+    <AuthProvider>
       <Routes>
-        <Route path="/" element = {<LandingPage />}/>
-        <Route path="/login" element = {<Login />}/>
-        <Route path="/register" element = {<Register />}/>
-        <Route path="/home" element = {<Home />}/>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-
-    </div>
+    </AuthProvider>
   );
-}
+};
 
 export default App;

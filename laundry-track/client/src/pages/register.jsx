@@ -1,9 +1,14 @@
-import React, { use , useState, useEffect  } from 'react';
+import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/Logo.png';
-import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { describeAxiosError } from '../utils/errors';
 
 function Register() {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -13,6 +18,7 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +32,6 @@ function Register() {
     e.preventDefault();
     setError('');
 
-    // Basic validation
     if (!formData.fullName.trim()) {
       setError('Full name is required');
       return;
@@ -44,18 +49,15 @@ function Register() {
       return;
     }
 
+    setSubmitting(true);
     try {
-      const response = await axios.post("http://localhost:3000/register", {
-        fullName: formData.fullName,
-        email: formData.email,
-        password: formData.password
-      });
-
-      // Assuming success, redirect or show success message
-      console.log('Registration successful:', response.data);
-      // You can redirect here, e.g., window.location.href = '/login';
-    } catch (error) {
-      setError(error.response?.data?.message || 'Registration failed');
+      await register(formData.fullName, formData.email, formData.password);
+      navigate('/home');
+    } catch (err) {
+      setError(describeAxiosError(err, 'Registration failed'));
+      console.error('Register failed:', err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -203,9 +205,10 @@ function Register() {
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full bg-teal-400 text-white font-semibold py-2.5 rounded-lg hover:bg-teal-500 transition-colors mt-8 shadow-md hover:shadow-lg"
+            disabled={submitting}
+            className="w-full bg-teal-400 text-white font-semibold py-2.5 rounded-lg hover:bg-teal-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors mt-8 shadow-md hover:shadow-lg"
           >
-            Create Account
+            {submitting ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 

@@ -1,21 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Upload, Camera, Check, RefreshCw, Image as ImageIcon } from 'lucide-react';
+import { X, Upload, Camera, Check, RefreshCw, Plus } from 'lucide-react';
 
-const TAG_OPTIONS = [
+export const DEFAULT_TAGS = [
   { id: 'travel', label: 'Travel' },
-  { id: 'sleeper', label: 'Sleeper' },
+  { id: 'night-suit', label: 'Night Suit' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'casual', label: 'Casual' },
   { id: 'formal', label: 'Formal' },
   { id: 'work', label: 'Work' },
 ];
 
-function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
+const slugify = (s) =>
+  s.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function AddClothingModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  collectionName,
+  customTags = [],
+  onAddCustomTag,
+}) {
   const [mode, setMode] = useState('choose');
   const [imageData, setImageData] = useState(null);
   const [selectedTag, setSelectedTag] = useState('');
   const [note, setNote] = useState('');
   const [cameraError, setCameraError] = useState('');
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [newTagLabel, setNewTagLabel] = useState('');
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -36,6 +48,8 @@ function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
     setSelectedTag('');
     setNote('');
     setCameraError('');
+    setShowTagInput(false);
+    setNewTagLabel('');
   };
 
   useEffect(() => {
@@ -88,13 +102,30 @@ function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
     reader.readAsDataURL(file);
   };
 
+  const handleAddCustomTag = () => {
+    const label = newTagLabel.trim();
+    if (!label) return;
+    const id = slugify(label) || `custom-${Date.now()}`;
+    const exists =
+      DEFAULT_TAGS.some((t) => t.id === id) || customTags.some((t) => t.id === id);
+    if (!exists) {
+      onAddCustomTag?.({ id, label });
+    }
+    setSelectedTag(id);
+    setNewTagLabel('');
+    setShowTagInput(false);
+  };
+
   const handleConfirm = () => {
     if (!imageData || !selectedTag) return;
     onConfirm({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       image: imageData,
       tag: selectedTag,
       note,
       createdAt: new Date().toISOString(),
+      returned: false,
+      returnedAt: null,
     });
     resetState();
     onClose();
@@ -106,6 +137,8 @@ function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
   };
 
   if (!isOpen) return null;
+
+  const allTags = [...DEFAULT_TAGS, ...customTags];
 
   return (
     <div
@@ -231,7 +264,7 @@ function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
                   Tag <span className="text-red-500">*</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {TAG_OPTIONS.map((tag) => (
+                  {allTags.map((tag) => (
                     <button
                       key={tag.id}
                       type="button"
@@ -245,7 +278,60 @@ function AddClothingModal({ isOpen, onClose, onConfirm, collectionName }) {
                       {tag.label}
                     </button>
                   ))}
+
+                  {!showTagInput && (
+                    <button
+                      type="button"
+                      onClick={() => setShowTagInput(true)}
+                      className="px-3 py-2 rounded-full text-sm font-medium border border-dashed border-slate-300 text-slate-600 hover:border-teal-400 hover:text-teal-500 flex items-center gap-1 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add tag
+                    </button>
+                  )}
                 </div>
+
+                {showTagInput && (
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      autoFocus
+                      type="text"
+                      value={newTagLabel}
+                      onChange={(e) => setNewTagLabel(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddCustomTag();
+                        }
+                        if (e.key === 'Escape') {
+                          setShowTagInput(false);
+                          setNewTagLabel('');
+                        }
+                      }}
+                      placeholder="e.g. School Uniform"
+                      maxLength={30}
+                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCustomTag}
+                      disabled={!newTagLabel.trim()}
+                      className="px-4 py-2 text-sm font-medium bg-teal-400 text-white rounded-lg hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowTagInput(false);
+                        setNewTagLabel('');
+                      }}
+                      className="px-3 py-2 text-sm text-slate-500 hover:text-slate-700"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div>

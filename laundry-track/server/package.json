@@ -16,9 +16,11 @@
     "dependencies": {
         "body-parser": "^2.2.2",
         "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
         "express": "^5.2.1",
         "express-react-views": "^0.11.0",
         "express-session": "^1.19.0",
+        "pg": "^8.21.0",
         "react": "^16.14.0",
         "react-dom": "^16.14.0"
     },

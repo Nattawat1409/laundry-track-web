@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import supabase from '../config/supabaseClient';
 
 const API = 'http://localhost:3000';
 
@@ -13,8 +14,8 @@ export function AuthProvider({ children }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await axios.get(`${API}/me`);
-      setUser(res.data.user);
+      const {data} = await supabase.auth.getSession();
+      setUser(data.session?.user || null);
     } catch {
       setUser(null);
     } finally {
@@ -26,16 +27,36 @@ export function AuthProvider({ children }) {
     refresh();
   }, [refresh]);
 
-  const login = async (email, password) => {
+  const login = async (email,password) => {
     const res = await axios.post(`${API}/login`, { email, password });
     setUser(res.data.user);
     return res.data.user;
   };
 
+  // register flow //
   const register = async (fullName, email, password) => {
-    const res = await axios.post(`${API}/register`, { fullName, email, password });
-    setUser(res.data.user);
-    return res.data.user;
+    const {data, error} = await supabase.auth.signUp(
+      {
+        email,
+        password,
+        options: {
+          data: {full_name: fullName,
+            email: email,
+            password: password
+          }
+        }
+      }
+    );
+
+    // var  user_email = data.user.email
+    // var user_name = data.user.user_metadata.full_name
+    // console.log(user_email);
+    // console.log(user_name);
+
+    if (error) throw error;
+
+    setUser(data.user);
+    return data.user;
   };
 
   const logout = async () => {

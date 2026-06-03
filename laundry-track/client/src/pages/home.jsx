@@ -5,6 +5,7 @@ import Navbar from '../component/Navbar';
 import Footer from '../component/Footer';
 import AddClothingModal, { DEFAULT_TAGS } from '../component/AddClothingModal';
 import { useAuth } from '../context/AuthContext';
+import supabase from '../config/supabaseClient.js';
 
 const STORAGE_KEY_PREFIX = 'laundryTrackData';
 
@@ -23,7 +24,6 @@ const initialCollections = () => [
 const CollectionCard = ({ collection, onSave, onOpenDetails, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(collection.name);
-
   const handleSave = () => {
     onSave({ ...collection, name });
     setIsEditing(false);
@@ -32,7 +32,6 @@ const CollectionCard = ({ collection, onSave, onOpenDetails, onDelete }) => {
   const total = collection.clothes?.length || 0;
   const atLaundry = collection.clothes?.filter((c) => !c.returned).length || 0;
   const returned = total - atLaundry;
-
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-6 hover:border-slate-600 transition-colors">
       <div className="flex items-start justify-between mb-4">
@@ -441,7 +440,7 @@ function Home() {
                 {' '}
                 — welcome back,{' '}
                 <span className="font-medium text-slate-800">
-                  {user.fullName.split(' ')[0]}
+                  {(user.user_metadata?.full_name || user.email).split(' ')[0]}
                 </span>
               </>
             )}
